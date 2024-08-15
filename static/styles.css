@@ -1,0 +1,17 @@
+/* Style for the tooltip icon */
+.tooltip-icon {
+    display: inline-block;
+    width: 14px;  /* Size of the icon */
+    height: 14px;
+    border-radius: 50%;  /* Circular shape */
+    background-color: #235aff;  /* Background color */
+    color: #fff;  /* Text color */
+    text-align: center;
+    line-height: 14px;  /* Center the ? vertically */
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;  /* Smaller text */
+    position: absolute;
+    top: 2px;  /* Distance from the top of the header */
+    right: 2px;  /* Distance from the right edge of the header */
+}

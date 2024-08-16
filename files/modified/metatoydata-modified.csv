@@ -1,0 +1,8 @@
+name,type,datastep,domainmin,domainmax,minincluded,maxincluded,plotmin,plotmax,V1,V2
+TreatmentGroup,,,,,,,,,NR,Placebo
+Sex,,,,,,,,,Female,Male
+Age,,1.0,0.0,inf,,,18.0,90.0,,
+Anamnestic.Loss.of.smell,,,,,,,,,No,Yes
+History.of.REM.Sleep.Behaviour.Disorder,,,,,,,,,No,Yes
+MDS.UPDRS..Subsection.III.V1,,1.0,0.0,132.0,,,0.0,70.0,,
+diff.MDS.UPRS.III,,1.0,-132.0,132.0,,,-40.0,40.0,,

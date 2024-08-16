@@ -1,17 +1,17 @@
-/* Style for the tooltip icon */
-.tooltip-icon {
-    display: inline-block;
-    width: 14px;  /* Size of the icon */
-    height: 14px;
-    border-radius: 50%;  /* Circular shape */
-    background-color: #235aff;  /* Background color */
-    color: #fff;  /* Text color */
-    text-align: center;
-    line-height: 14px;  /* Center the ? vertically */
+/* Style for tooltips */
+.tooltip-inner {
+    background-color: #848584; /* Dark background for tooltips */
+    color: #ffffff; /* White text color */
+    font-size: 0.875rem; /* Font size for tooltips */
+}
+
+/* Style for dropdown cells */
+.dropdown-cell {
+    position: relative;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 12px;  /* Smaller text */
-    position: absolute;
-    top: 2px;  /* Distance from the top of the header */
-    right: 2px;  /* Distance from the right edge of the header */
+}
+
+/* Display the dropdown menu on click */
+.dropdown-cell.show .dropdown-menu {
+    display: block;
 }

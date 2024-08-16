@@ -10,7 +10,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        const filename = "{{ filename }}";
+    </script>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    
 </head>
 <body>
     <div class="container">
@@ -19,13 +23,12 @@
             <thead>
                 <tr>
                     {% for column in columns %}
-                        <th class="{% if column in tooltip_columns %}has-tooltip{% endif %} 
-                            {% if column == 'type' %}column-type{% endif %}">
-                            {{ column }}
-                            {% if column in tooltip_columns %}
-                                <span class="tooltip-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ column_tooltips[column] }}">?</span>
-                            {% endif %}
-                        </th>
+                    <th class="{% if column in tooltip_columns %}has-tooltip{% endif %}" 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top" 
+                        title="{{ column_tooltips[column] }}">
+                        {{ column }}
+                    </th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -33,16 +36,20 @@
                 {% for row in data %}
                     <tr>
                         {% for col in columns %}
-                            {% if col == 'type' %}
-                                <td class="editable-cell dropdown-cell" data-col="{{ col }}">
-                                    <span class="dropdown-toggle" data-bs-toggle="dropdown">{{ row[col] }}</span>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#" data-value="ordinal">ordinal</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="binary">binary</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="continuous">continuous</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="nominal">nominal</a></li>
-                                    </ul>
-                                </td>
+                        {% if col == 'type' or col == 'minincluded' or col == 'maxincluded' %}
+                        <td class="editable-cell dropdown-cell" data-col="{{ col }}">
+                            <span class="dropdown-toggle-text">{{ row[col] if row[col] else '' }}</span>
+                            <ul class="dropdown-menu">
+                                {% if col == 'type' %}
+                                    <li><a class="dropdown-item" href="#" data-value="ordinal" data-bs-toggle="tooltip" data-bs-placement="right" title="Ordinal data type: Order matters, but not the distance between values">ordinal</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="continuous" data-bs-toggle="tooltip" data-bs-placement="right" title="Continuous data type: Values can take any number within a range">continuous</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="nominal" data-bs-toggle="tooltip" data-bs-placement="right" title="Nominal data type: Categories with no intrinsic ordering">nominal</a></li>
+                            </ul>
+                                {% elif col == 'minincluded' or col == 'maxincluded' %}
+                                    <li><a class="dropdown-item" href="#" data-value="True">True</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="False">False</a></li>
+                                {% endif %}
+                            </ul>
                             {% else %}
                                 <td contenteditable="true" class="editable-cell" data-col="{{ col }}">{{ row[col] }}</td>
                             {% endif %}

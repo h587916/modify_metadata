@@ -30,13 +30,12 @@ def edit_file(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     df = pd.read_csv(file_path)
     columns = df.columns.tolist()
-    data = df.to_dict(orient='records')
+    data = df.fillna('').to_dict(orient='records')  # Replace NaN with empty strings
     
     # Example tooltips
     tooltips = {
         "type": "Type of data (ordinal, binary, continuous, nominal)",
-        "Nvalues": "Number of values",
-        "gapwidth": "Width of gaps",
+        "datastep": "Width of gaps",
         "domainmin": "Minimum domain value",
         "domainmax": "Maximum domain value",
         "minincluded": "Is the minimum included?",
@@ -45,7 +44,7 @@ def edit_file(filename):
         "plotmax": "Maximum value for plotting"
     }
 
-    tooltip_columns = ["type", "Nvalues", "gapwidth", "domainmin", "domainmax", "minincluded", "maxincluded", "plotmin", "plotmax"]
+    tooltip_columns = ["type", "datastep", "domainmin", "domainmax", "minincluded", "maxincluded", "plotmin", "plotmax"]
 
     return render_template('edit.html', data=data, columns=columns, column_tooltips=tooltips, filename=filename, tooltip_columns=tooltip_columns)
 
@@ -58,8 +57,18 @@ def save_changes():
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     modified_file_path = os.path.join(app.config['MODIFIED_FOLDER'], modified_filename)
 
+    # Load the original CSV file
+    original_df = pd.read_csv(file_path)
+    original_columns = original_df.columns.tolist()
+
     # Convert list of dicts to DataFrame
     df = pd.DataFrame(table_data)
+
+    # Clean incoming DataFrame column names
+    df.columns = df.columns.str.strip().str.replace('\n', '').str.replace(' ', '')
+
+    # Reorder columns to match original CSV
+    df = df[original_columns]
 
     # Save DataFrame to CSV
     df.to_csv(modified_file_path, index=False)

@@ -2,8 +2,23 @@ $(document).ready(function() {
     // Initialize tooltips
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    // Initialize DataTable (if you are using DataTables library)
-    $('#csvTable').DataTable();
+    // Initialize Bootstrap tooltips for dropdown items
+    $('#csvTable').on('mouseenter', '.dropdown-item', function() {
+        $(this).tooltip('show');
+    });
+
+    $('#csvTable').on('mouseleave', '.dropdown-item', function() {
+        $(this).tooltip('hide');
+    });
+
+    // Initialize DataTable
+    $('#csvTable').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+        lengthChange: false,
+    });
 
     // Handle Save Changes button click
     $('#saveBtn').click(function() {
@@ -13,7 +28,8 @@ $(document).ready(function() {
             let rowData = {};
             $(this).find('td').each(function(index) {
                 let columnName = $('#csvTable thead th').eq(index).text();
-                rowData[columnName] = $(this).text().trim();  // Use .text() for contenteditable cells, including dropdowns
+                let cellContent = $(this).hasClass('dropdown-cell') ? $(this).find('.dropdown-toggle').text().trim() : $(this).text().trim();
+                rowData[columnName] = cellContent;  // Use cellContent to get the actual value
             });
             tableData.push(rowData);
         });
@@ -23,7 +39,7 @@ $(document).ready(function() {
             url: '/save_changes',
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ data: tableData, filename: '{{ filename }}' }),
+            data: JSON.stringify({ data: tableData, filename: filename }),  // Use the filename variable
             success: function(response) {
                 alert('Changes saved successfully!');
                 window.location.href = response.download_url; // Redirect to the download URL
@@ -34,16 +50,35 @@ $(document).ready(function() {
         });
     });
 
+    // Handle cell click to show dropdown
+    $('#csvTable').on('click', '.dropdown-cell', function() {
+        // Close all dropdowns
+        $('.dropdown-cell').not(this).removeClass('show');
+        // Toggle the clicked dropdown
+        $(this).toggleClass('show');
+    });
+
     // Handle dropdown selection
     $('#csvTable').on('click', '.dropdown-item', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         var selectedValue = $(this).data('value');
-        var cell = $(this).closest('td');
-        
-        // Update the displayed value
-        cell.find('.dropdown-toggle').text(selectedValue);
+        var cell = $(this).closest('.dropdown-cell');
 
-        // If needed, update the actual content of the cell
-        cell.attr('data-value', selectedValue);
+        // Update the displayed value
+        cell.find('.dropdown-toggle-text').text(selectedValue);
+
+        // Update the actual content of the cell
+        cell.attr('data-value', selectedValue);  // Ensure the data-value contains only the selected value
+
+        // Close the dropdown menu
+        cell.removeClass('show');
+    });
+
+    // Close dropdown if clicked outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.dropdown-cell').length) {
+            $('.dropdown-cell').removeClass('show');
+        }
     });
 });

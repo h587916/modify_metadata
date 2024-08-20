@@ -10,8 +10,8 @@ app.config['MODIFIED_FOLDER'] = 'files/modified/'
 os.makedirs(app.config['MODIFIED_FOLDER'], exist_ok=True)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def upload():
+    return render_template('upload.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -34,7 +34,7 @@ def edit_file(filename):
     
     # Example tooltips
     tooltips = {
-        "type": "Type of data (ordinal, binary, continuous, nominal)",
+        "type": "Type of data (nominal, ordinal, continuous)",
         "datastep": "Width of gaps",
         "domainmin": "Minimum domain value",
         "domainmax": "Maximum domain value",

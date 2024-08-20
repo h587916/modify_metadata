@@ -41,17 +41,18 @@
                             <span class="dropdown-toggle-text">{{ row[col] if row[col] else '' }}</span>
                             <ul class="dropdown-menu">
                                 {% if col == 'type' %}
-                                    <li><a class="dropdown-item" href="#" data-value="ordinal" data-bs-toggle="tooltip" data-bs-placement="right" title="Ordinal data type: Order matters, but not the distance between values">ordinal</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="continuous" data-bs-toggle="tooltip" data-bs-placement="right" title="Continuous data type: Values can take any number within a range">continuous</a></li>
-                                    <li><a class="dropdown-item" href="#" data-value="nominal" data-bs-toggle="tooltip" data-bs-placement="right" title="Nominal data type: Categories with no intrinsic ordering">nominal</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="nominal" data-bs-toggle="tooltip" data-bs-placement="right" title="Covers categorical data without any inherent order. Examples include gender, colors, yes/no, true/false.">nominal</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="ordinal" data-bs-toggle="tooltip" data-bs-placement="right" title="Covers categorical data where order matters, but not the distance between values. Examples include rankings (1st, 2nd, 3rd) or levels of satisfaction (low, medium, high)">ordinal</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="continuous" data-bs-toggle="tooltip" data-bs-placement="right" title="Refers to numerical data that can take on any value within a range and can be measured with infinite precision. Examples include measurements like height, weight, or temperature">continuous</a></li>
                             </ul>
                                 {% elif col == 'minincluded' or col == 'maxincluded' %}
                                     <li><a class="dropdown-item" href="#" data-value="True">True</a></li>
                                     <li><a class="dropdown-item" href="#" data-value="False">False</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="">Empty</a></li>
                                 {% endif %}
                             </ul>
                             {% else %}
-                                <td contenteditable="true" class="editable-cell" data-col="{{ col }}">{{ row[col] }}</td>
+                                <td contenteditable="true" class="editable-cell" spellcheck="false" data-col="{{ col }}">{{ row[col] }}</td>
                             {% endif %}
                         {% endfor %}
                     </tr>

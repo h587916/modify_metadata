@@ -28,8 +28,15 @@ $(document).ready(function() {
             let rowData = {};
             $(this).find('td').each(function(index) {
                 let columnName = $('#csvTable thead th').eq(index).text();
-                let cellContent = $(this).hasClass('dropdown-cell') ? $(this).find('.dropdown-toggle').text().trim() : $(this).text().trim();
-                rowData[columnName] = cellContent;  // Use cellContent to get the actual value
+                
+                // Get the content based on whether it's a dropdown or regular cell
+                if ($(this).hasClass('dropdown-cell')) {
+                    // Get the selected value from the dropdown
+                    rowData[columnName] = $(this).find('.dropdown-toggle-text').text().trim();
+                } else {
+                    // Get the text content for regular cells
+                    rowData[columnName] = $(this).text().trim();
+                }
             });
             tableData.push(rowData);
         });

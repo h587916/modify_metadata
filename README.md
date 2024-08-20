@@ -1,6 +1,6 @@
 # Modify Metadata Application
 
-This is a simple web-based application built with Flask, designed to modify metadatafiles used in the OPM.
+This is a simple web-based application built with Flask, designed to modify metadata files used in the OPM.
 
 ## Getting Started
 

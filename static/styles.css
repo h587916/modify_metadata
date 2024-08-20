@@ -15,3 +15,23 @@
 .dropdown-cell.show .dropdown-menu {
     display: block;
 }
+
+
+/* Ensure container is positioned relative for absolute positioning of buttons */
+.container {
+    position: relative;
+}
+
+/* Style for button container to align buttons at the bottom-right */
+.button-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 10px; /* Space from bottom edge */
+    margin-right: 10px;  /* Space from right edge */
+}
+
+/* Optional: Ensure buttons have some spacing */
+.button-container button {
+    margin-left: 5px; /* Space between buttons */
+}

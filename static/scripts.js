@@ -1,4 +1,20 @@
 $(document).ready(function() {
+    // Intialize history stacks
+    let undoStack = [];
+    let redoStack = [];
+
+     // Save the current state of the table
+     function saveState() {
+        const tableState = $('#csvTable').html();
+        undoStack.push(tableState);
+        redoStack = []; // Clear redo stack whenever a new state is saved
+    }
+
+    // Restore given state
+    function restoreState(state) {
+        $('#csvTable').html(state);
+    }
+
     // Initialize tooltips
     $('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -65,6 +81,11 @@ $(document).ready(function() {
         $(this).toggleClass('show');
     });
 
+    // Handle cell edit (for text input cells)
+    $('#csvTable').on('input', '.editable-cell', function() {
+        saveState();
+    });
+
     // Handle dropdown selection
     $('#csvTable').on('click', '.dropdown-item', function(e) {
         e.preventDefault();
@@ -78,6 +99,9 @@ $(document).ready(function() {
         // Update the actual content of the cell
         cell.attr('data-value', selectedValue);  // Ensure the data-value contains only the selected value
 
+        // Save the state after a dropdown selection
+        saveState();
+
         // Close the dropdown menu
         cell.removeClass('show');
     });
@@ -88,4 +112,25 @@ $(document).ready(function() {
             $('.dropdown-cell').removeClass('show');
         }
     });
+
+    // Handle Undo button click
+    $('#undoBtn').click(function() {
+        if (undoStack.length > 1) {  // Ensure there is a previous state to revert to
+            const currentState = undoStack.pop();
+            redoStack.push(currentState);
+            const previousState = undoStack[undoStack.length - 1];
+            restoreState(previousState);
+        }
+    });
+
+    // Handle Redo button click
+    $('#redoBtn').click(function() {
+        if (redoStack.length > 0) {  // Ensure there is a state to redo
+            const nextState = redoStack.pop();
+            undoStack.push(nextState);
+            restoreState(nextState);
+        }
+    });
+
+    saveState(); // Save initial state
 });

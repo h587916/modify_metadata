@@ -11,7 +11,7 @@ Make sure you have the following installed on your system:
 - **Git** - [Installation guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - **R** - Download from [CRAN](https://cran.r-project.org/mirrors.html)
 
-### Setting Up `R_HOME` Environment Variable
+### Setting Up R
 
 To successfully run this project, you need to set the `R_HOME` environment variable on your computer. This environment variable should point to the directory where R is installed. Follow the steps below to configure it:
 
@@ -35,11 +35,19 @@ On Windows:
     - `C:\Program Files\R\R-x.x.x\`
 7. Click **OK** to close each window and apply
 
-### Installation
+#### 3. Install R package inferno
+Open a R terminal and run the following
+  ```bash
+  install.packages("devtools")
+  devtools::install_github('pglpm/inferno')
+  ```
+
+### Setting up the Flask App
 
 1. **Make sure to have Python 3.12 activated**:
    ```bash
    python --version
+    ```
   
 2. **Clone the repository**:
     ```bash

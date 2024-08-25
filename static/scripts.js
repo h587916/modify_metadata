@@ -15,6 +15,24 @@ $(document).ready(function() {
         $('#csvTable').html(state);
     }
 
+    // Function to collect the current table data
+    function collectTableData() {
+        let tableData = [];
+        $('#csvTable tbody tr').each(function() {
+            let rowData = {};
+            $(this).find('td').each(function(index) {
+                let columnName = $('#csvTable thead th').eq(index).text();
+                if ($(this).hasClass('dropdown-cell')) {
+                    rowData[columnName] = $(this).find('.dropdown-toggle-text').text().trim();
+                } else {
+                    rowData[columnName] = $(this).text().trim();
+                }
+            });
+            tableData.push(rowData);
+        });
+        return tableData;
+    }
+
     // Initialize tooltips
     $('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -23,6 +41,7 @@ $(document).ready(function() {
         $(this).tooltip('show');
     });
 
+    // Hide Bootstrap tooltips for dropdown items on mouse leave
     $('#csvTable').on('mouseleave', '.dropdown-item', function() {
         $(this).tooltip('hide');
     });
@@ -38,26 +57,9 @@ $(document).ready(function() {
 
     // Handle Save Changes button click
     $('#saveBtn').click(function() {
-        // Collect table data
-        let tableData = [];
-        $('#csvTable tbody tr').each(function() {
-            let rowData = {};
-            $(this).find('td').each(function(index) {
-                let columnName = $('#csvTable thead th').eq(index).text();
-                
-                // Get the content based on whether it's a dropdown or regular cell
-                if ($(this).hasClass('dropdown-cell')) {
-                    // Get the selected value from the dropdown
-                    rowData[columnName] = $(this).find('.dropdown-toggle-text').text().trim();
-                } else {
-                    // Get the text content for regular cells
-                    rowData[columnName] = $(this).text().trim();
-                }
-            });
-            tableData.push(rowData);
-        });
-
-        // Send data to server
+        let tableData = collectTableData();
+        
+        // Send data to server to save changes
         $.ajax({
             url: '/save_changes',
             method: 'POST',
@@ -65,10 +67,28 @@ $(document).ready(function() {
             data: JSON.stringify({ data: tableData, filename: filename }),  // Use the filename variable
             success: function(response) {
                 alert('Changes saved successfully!');
-                window.location.href = response.download_url; // Redirect to the download URL
             },
             error: function(xhr, status, error) {
                 alert('An error occurred while saving changes.');
+            }
+        });
+    });
+
+    // Handle Download button click
+    $('#downloadBtn').click(function() {
+        let tableData = collectTableData();
+        
+        // Send data to server to save as a downloadable file
+        $.ajax({
+            url: '/save_changes',  // Reuse the save_changes route to generate the download file
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ data: tableData, filename: filename }),  // Use the filename variable
+            success: function(response) {
+                window.location.href = response.download_url;  // Trigger the download
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while generating the download.');
             }
         });
     });
